@@ -2,129 +2,134 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1280"> <title>CineVerse | El Engaño</title>
+    <meta name="viewport" content="width=1350"> <title>CineVerse | Premium Streaming</title>
     <style>
-        :root { --red: #ff3c3c; --bg: #050505; --glass: rgba(255,255,255,0.05); }
-        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 50px; }
+        :root { --accent: #ff0000; --bg: #0a0a0a; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
 
-        /* --- CONTENEDOR PC --- */
-        .pc-monitor {
-            width: 800px;
-            height: 500px;
-            margin: 50px auto;
-            background: #111;
-            border: 15px solid #d1d1d1; /* Marco estilo Mac */
-            border-radius: 30px;
-            position: relative;
-            box-shadow: 0 0 50px rgba(0, 242, 255, 0.2);
-            overflow: hidden;
+        /* HEADER */
+        header { 
+            padding: 20px 50px; 
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0,0,0,0.8); border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000;
         }
+        .logo { font-size: 24px; font-weight: 900; color: var(--accent); letter-spacing: 2px; }
 
-        .pc-monitor::after { /* Soporte de la PC */
-            content: '';
-            position: absolute;
-            bottom: -65px; left: 50%;
-            transform: translateX(-50%);
-            width: 150px; height: 50px;
-            background: #a1a1a1;
+        /* GALERIA INICIAL */
+        .home-view { padding: 50px; display: flex; gap: 30px; justify-content: center; }
+        .serie-card { 
+            width: 250px; cursor: pointer; transition: 0.4s; border-radius: 15px; overflow: hidden;
+            border: 2px solid transparent;
+        }
+        .serie-card:hover { transform: scale(1.05); border-color: var(--accent); box-shadow: 0 0 30px var(--accent); }
+        .serie-card img { width: 100%; height: 370px; object-fit: cover; }
+
+        /* VISTA DE SERIE (OCULTA POR DEFECTO) */
+        #serie-view { display: none; min-height: 100vh; background-size: cover; background-position: center; background-attachment: fixed; }
+        .overlay { background: rgba(0,0,0,0.85); min-height: 100vh; padding: 40px; }
+
+        /* MONITOR MAC */
+        .monitor-container {
+            width: 980px; height: 600px; margin: 40px auto;
+            background: #1a1a1a; border: 12px solid #e0e0e0; border-radius: 30px;
+            box-shadow: 0 0 80px rgba(0,0,0,0.9); position: relative;
+        }
+        .screen { width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; }
+        .monitor-base { 
+            width: 180px; height: 60px; background: #c0c0c0; margin: -10px auto 0;
             clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
         }
 
-        .screen-content { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #000; }
-        .screen-content iframe { width: 100%; height: 100%; border: none; }
-        
-        #placeholder-img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* --- SELECTOR --- */
-        .selector-section { text-align: center; margin-top: 100px; }
-        .title-prompt { font-size: 2rem; color: var(--red); margin-bottom: 20px; text-shadow: 0 0 10px rgba(255,60,60,0.5); }
-        
-        .season-btns { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }
-        .btn-t { background: transparent; border: 2px solid #333; color: white; padding: 10px 30px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; }
-        .btn-t.active { border-color: var(--red); box-shadow: 0 0 15px var(--red); }
-
-        /* --- GRID CAPITULOS --- */
-        .episodes-grid {
-            width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-            background: var(--glass);
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid #222;
+        /* CAPITULOS */
+        .episodes-area { width: 1100px; margin: 50px auto; }
+        .season-title { font-size: 2rem; border-left: 5px solid var(--accent); padding-left: 15px; margin-bottom: 30px; }
+        .ep-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .ep-item { 
+            background: #151515; padding: 20px; border-radius: 10px; cursor: pointer;
+            border: 1px solid #333; text-align: center; transition: 0.3s;
         }
+        .ep-item:hover { background: var(--accent); color: white; }
 
-        .ep-card {
-            background: #151515;
-            border-radius: 10px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: 0.3s;
-            border: 1px solid transparent;
-        }
-
-        .ep-card:hover { transform: translateY(-5px); border-color: var(--red); }
-        .ep-card img { width: 100%; height: 120px; object-fit: cover; opacity: 0.7; }
-        .ep-info { padding: 10px; font-size: 0.9rem; text-align: center; }
+        .back-btn { background: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="pc-monitor">
-        <div class="screen-content" id="screen">
-            <img id="placeholder-img" src="" alt="Poster">
+<header>
+    <div class="logo">CINEVERSE <span style="color:white">PRO</span></div>
+    <button class="back-btn" onclick="goHome()">⬅ Volver al Inicio</button>
+</header>
+
+<div id="home-view" class="home-view">
+    </div>
+
+<div id="serie-view">
+    <div class="overlay">
+        <div class="monitor-container">
+            <div class="screen" id="main-screen">
+                <h2 id="wait-msg">Selecciona un capítulo abajo</h2>
+            </div>
+        </div>
+        <div class="monitor-base"></div>
+
+        <div class="episodes-area">
+            <div class="season-title" id="serie-title">Título Serie</div>
+            <div class="ep-list" id="ep-list-container">
+                </div>
         </div>
     </div>
+</div>
 
-    <div class="selector-section">
-        <div class="title-prompt">Elegir Temporada:</div>
-        <div class="season-btns" id="seasons-nav"></div>
-    </div>
+<script>
+    let db = null;
 
-    <div class="episodes-grid" id="episodes-list"></div>
+    // 1. Cargar base de datos
+    fetch('database.json')
+        .then(res => res.json())
+        .then(data => {
+            db = data;
+            renderHome();
+        });
 
-    <script>
-        let globalData = null;
+    function renderHome() {
+        const home = document.getElementById('home-view');
+        home.innerHTML = db.series.map(serie => `
+            <div class="serie-card" onclick="openSerie('${serie.id}')">
+                <img src="${serie.poster}">
+                <div style="padding:15px; text-align:center; font-weight:bold;">${serie.titulo}</div>
+            </div>
+        `).join('');
+    }
 
-        // Cargar JSON
-        fetch('database.json')
-            .then(res => res.json())
-            .then(data => {
-                globalData = data;
-                document.getElementById('placeholder-img').src = data.poster;
-                renderSeasons();
-                loadSeason(1);
-            });
+    function openSerie(id) {
+        const serie = db.series.find(s => s.id === id);
+        document.getElementById('home-view').style.display = 'none';
+        const view = document.getElementById('serie-view');
+        view.style.display = 'block';
+        view.style.backgroundImage = `url('${serie.fondo}')`;
+        
+        document.getElementById('serie-title').innerText = serie.titulo;
+        
+        // Renderizar Capítulos de la T1
+        const list = document.getElementById('ep-list-container');
+        list.innerHTML = serie.temporadas[0].capitulos.map(cap => `
+            <div class="ep-item" onclick="playCap('${btoa(cap.embed)}')">
+                <div style="font-size:0.8rem; opacity:0.6">Capítulo ${cap.num}</div>
+                <div>${cap.titulo}</div>
+            </div>
+        `).join('');
+    }
 
-        function renderSeasons() {
-            const nav = document.getElementById('seasons-nav');
-            globalData.temporadas.forEach(t => {
-                nav.innerHTML += `<button class="btn-t ${t.id===1?'active':''}" onclick="loadSeason(${t.id})">${t.nombre}</button>`;
-            });
-        }
+    function playCap(encodedEmbed) {
+        document.getElementById('main-screen').innerHTML = atob(encodedEmbed);
+    }
 
-        function loadSeason(id) {
-            const grid = document.getElementById('episodes-list');
-            grid.innerHTML = "";
-            const season = globalData.temporadas.find(t => t.id === id);
-            
-            season.capitulos.forEach(cap => {
-                grid.innerHTML += `
-                    <div class="ep-card" onclick="playVideo('${btoa(cap.embed)}')">
-                        <img src="${cap.thumb}">
-                        <div class="ep-info">Capítulo ${cap.num}: ${cap.titulo}</div>
-                    </div>
-                `;
-            });
-        }
+    function goHome() {
+        document.getElementById('home-view').style.display = 'flex';
+        document.getElementById('serie-view').style.display = 'none';
+        document.getElementById('main-screen').innerHTML = '<h2>Selecciona un capítulo abajo</h2>';
+    }
+</script>
 
-        function playVideo(encodedEmbed) {
-            const screen = document.getElementById('screen');
-            // Decodificamos el embed e inyectamos
-            screen.innerHTML = atob(encodedEmbed);
-        }
-    </script>
 </body>
 </html>
