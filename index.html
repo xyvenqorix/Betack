@@ -2,102 +2,53 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1300"> <title>CineVerse PRO | Streaming Inteligente</title>
+    <meta name="viewport" content="width=1300">
+    <title>CineVerse PRO | No-ID Version</title>
     <style>
         :root { --red: #e50914; --bg: #050505; --surface: #121212; }
         body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
 
-        /* HEADER PROFESIONAL */
         header { 
             background: #000; padding: 15px 40px; border-bottom: 2px solid var(--red);
             display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000;
         }
-        .nav-left { display: flex; align-items: center; gap: 20px; }
         .logo { font-weight: 900; color: var(--red); letter-spacing: 2px; font-size: 1.4rem; cursor: pointer; }
-        
-        .search-box input { 
-            background: #222; border: 1px solid #444; color: white; padding: 8px 15px; 
-            border-radius: 20px; width: 250px; outline: none; transition: 0.3s;
-        }
-        .search-box input:focus { border-color: var(--red); width: 350px; }
+        .search-box input { background: #222; border: 1px solid #444; color: white; padding: 8px 15px; border-radius: 20px; outline: none; width: 250px; }
 
-        .btn-link { color: #aaa; text-decoration: none; margin-left: 15px; font-size: 0.9rem; }
-
-        /* GRID DE SERIES (UNO AL LADO DE OTRO) */
-        #catalog { 
-            display: grid; grid-template-columns: repeat(auto-fill, 180px); 
-            gap: 20px; padding: 40px; justify-content: center;
-        }
-        .serie-card { 
-            cursor: pointer; transition: 0.3s; border-radius: 8px; overflow: hidden; 
-            background: var(--surface); border: 1px solid #222;
-        }
+        #catalog { display: grid; grid-template-columns: repeat(auto-fill, 180px); gap: 20px; padding: 40px; justify-content: center; }
+        .serie-card { cursor: pointer; transition: 0.3s; border-radius: 8px; overflow: hidden; background: var(--surface); border: 1px solid #222; }
         .serie-card:hover { transform: translateY(-5px); border-color: var(--red); }
         .serie-card img { width: 100%; height: 260px; object-fit: cover; }
         .serie-card p { font-size: 0.8rem; padding: 8px; margin: 0; text-align: center; }
 
-        /* REPRODUCTOR */
         #player-view { display: none; padding: 20px 0; }
-        .pc-monitor {
-            width: 720px; height: 400px; margin: 0 auto;
-            border: 10px solid #ddd; border-radius: 20px; background: #000;
-            position: relative; overflow: hidden;
-        }
+        .pc-monitor { width: 720px; height: 400px; margin: 0 auto; border: 10px solid #ddd; border-radius: 20px; background: #000; position: relative; overflow: hidden; }
         .pc-monitor img { width: 100%; height: 100%; object-fit: cover; }
         .pc-base { width: 140px; height: 40px; background: #999; margin: -5px auto 30px; clip-path: polygon(15% 0, 85% 0, 100% 100%, 0 100%); }
-
-        .video-box {
-            width: 954px; height: 562px; margin: 30px auto;
-            background: #000; border: 2px solid #222; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        .btn-ui { 
-            background: var(--red); color: white; border: none; padding: 10px 20px; 
-            margin: 5px; cursor: pointer; border-radius: 5px; font-weight: bold; 
-        }
-
-        /* WHATSAPP FLOAT */
-        .ws-float {
-            position: fixed; bottom: 20px; right: 20px; background: #25d366;
-            width: 55px; height: 55px; border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; z-index: 1000;
-        }
+        .video-box { width: 954px; height: 562px; margin: 30px auto; background: #000; border: 2px solid #222; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .btn-ui { background: var(--red); color: white; border: none; padding: 10px 20px; margin: 5px; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .ws-float { position: fixed; bottom: 20px; right: 20px; background: #25d366; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1000; text-decoration: none; font-size: 25px; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="nav-left">
-        <div class="logo" onclick="goHome()">CINEVERSE <span style="color:white">PRO</span></div>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Buscar..." onkeyup="search()">
-        </div>
-    </div>
-    <div id="header-extra">
-        <a href="#" class="btn-link">Mi Web</a>
-        <a href="#" class="btn-link">Acerca de</a>
-    </div>
+    <div class="logo" onclick="goHome()">CINEVERSE <span style="color:white">PRO</span></div>
+    <div class="search-box"><input type="text" id="searchInput" placeholder="Buscar..." onkeyup="search()"></div>
+    <div id="header-extra"></div>
 </header>
 
 <div id="catalog"></div>
 
 <div id="player-view">
     <div style="text-align: center; margin-bottom: 20px;">
-        <button class="btn-ui" onclick="goHome()" style="background:#333">⬅ ATRÁS</button>
+        <button class="btn-ui" onclick="goHome()" style="background:#333">⬅ INICIO</button>
         <button class="btn-ui" id="share-btn">COMPARTIR 🔗</button>
     </div>
-
-    <div class="pc-monitor">
-        <img id="monitor-foto" src="">
-    </div>
+    <div class="pc-monitor"><img id="monitor-foto" src=""></div>
     <div class="pc-base"></div>
-
     <div id="cap-buttons" style="text-align: center;"></div>
-
-    <div class="video-box" id="main-video">
-        <h2 style="color:#222">REPRODUCTOR LISTO</h2>
-    </div>
+    <div class="video-box" id="main-video"><h2 style="color:#222">SELECCIONA CAPÍTULO</h2></div>
 </div>
 
 <a href="https://wa.me/TUNUMERO" class="ws-float">🟢</a>
@@ -105,19 +56,21 @@
 <script>
     let db = null;
 
-    // 1. CARGA INICIAL
+    // Función para limpiar el título y hacerlo URL (ej: "La Casa" -> "la-casa")
+    const slugify = (text) => text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+
     fetch('database.json')
         .then(res => res.json())
         .then(data => {
             db = data;
             renderCatalog(db.series);
-            checkHash(); // Revisa si la URL trae un #serie
+            checkHash();
         });
 
     function renderCatalog(list) {
         const catalog = document.getElementById('catalog');
         catalog.innerHTML = list.map(s => `
-            <div class="serie-card" onclick="selectSerie('${s.id}')">
+            <div class="serie-card" onclick="selectSerie('${s.titulo}')">
                 <img src="${s.poster}">
                 <p>${s.titulo}</p>
             </div>
@@ -129,26 +82,24 @@
         renderCatalog(db.series.filter(s => s.titulo.toLowerCase().includes(q)));
     }
 
-    // 2. LÓGICA DE NAVEGACIÓN AGRESIVA (URL HASH)
-    function selectSerie(id) {
-        const serie = db.series.find(s => s.id === id);
+    function selectSerie(tituloOriginal) {
+        const serie = db.series.find(s => s.titulo === tituloOriginal);
         if(!serie) return;
 
-        window.location.hash = id; // Actualiza la barra del navegador
+        window.location.hash = slugify(serie.titulo); 
         
         document.getElementById('catalog').style.display = 'none';
         document.getElementById('player-view').style.display = 'block';
         document.getElementById('monitor-foto').src = serie.preview_foto;
+        document.getElementById('header-extra').innerHTML = `<span style="color:var(--red); font-weight:bold; font-size:1.2rem;">#${serie.titulo}</span>`;
         
-        // Botón compartir dinámico
         document.getElementById('share-btn').onclick = () => {
             navigator.clipboard.writeText(window.location.href);
-            alert("URL copiada: " + window.location.href);
+            alert("Enlace copiado!");
         };
 
-        const btns = document.getElementById('cap-buttons');
-        btns.innerHTML = serie.capitulos.map(c => `
-            <button class="btn-ui" onclick="play('${btoa(c.embed)}')">VER CAP ${c.num}</button>
+        document.getElementById('cap-buttons').innerHTML = serie.capitulos.map(c => `
+            <button class="btn-ui" onclick="play('${btoa(c.embed)}')">CAP ${c.num}</button>
         `).join('');
     }
 
@@ -159,16 +110,14 @@
 
     function checkHash() {
         const h = window.location.hash.replace('#', '');
-        if(h) setTimeout(() => selectSerie(h), 300);
+        if(h && db) {
+            const found = db.series.find(s => slugify(s.titulo) === h);
+            if(found) selectSerie(found.titulo);
+        }
     }
 
-    function goHome() {
-        window.location.hash = "";
-        location.reload();
-    }
-
+    function goHome() { window.location.hash = ""; location.reload(); }
     window.onhashchange = checkHash;
 </script>
-
 </body>
 </html>
