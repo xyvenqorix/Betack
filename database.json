@@ -1,21 +1,19 @@
 {
   "series": [
     {
-      "id": "serie_1",
-      "titulo": "El Engaño (HDFull)",
+      "titulo": "El Engaño",
       "poster": "https://hdfullcdn.cc/tthumb/172x256/movie_181cb4c6b83d7e7d93d2fd2d97fa9e2f.jpg",
       "preview_foto": "https://hdfullcdn.cc/tthumb/172x256/movie_181cb4c6b83d7e7d93d2fd2d97fa9e2f.jpg",
       "capitulos": [
-        { "num": 1, "titulo": "Piloto", "embed": "<IFRAME SRC=\"https://powvideo.org/embed-c2nw6ki6806d-954x562.html\" frameborder=\"0\" marginwidth=\"0\" marginheight=\"0\" scrolling=\"NO\" width=\"954\" height=\"562\" allowfullscreen=\"true\"></IFRAME>" }
+        { "num": 1, "titulo": "Piloto", "embed": "<IFRAME SRC=\"https://powvideo.org/embed-c2nw6ki6806d-954x562.html\" frameborder=\"0\" width=\"954\" height=\"562\" allowfullscreen=\"true\"></IFRAME>" }
       ]
     },
     {
-      "id": "serie_2",
       "titulo": "La Casa de Papel",
       "poster": "https://via.placeholder.com/172x256/ff0000/ffffff?text=Casa+de+Papel",
       "preview_foto": "https://images.alphacoders.com/102/1021950.jpg",
       "capitulos": [
-        { "num": 1, "titulo": "Efectuar lo acordado", "embed": "<IFRAME SRC=\"https://powvideo.org/embed-ejemplo-954x562.html\" frameborder=\"0\" width=\"954\" height=\"562\" allowfullscreen=\"true\"></IFRAME>" }
+        { "num": 1, "titulo": "Efectuar lo acordado", "embed": "<IFRAME SRC=\"https://powvideo.org/embed-ejemplo.html\" frameborder=\"0\" width=\"954\" height=\"562\" allowfullscreen=\"true\"></IFRAME>" }
       ]
     }
   ]
