@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1300">
-    <title>CineVerse PRO</title>
+    <title>CineVerse PRO | Extreme Edition</title>
     <style>
         :root { --red: #e50914; --bg: #050505; --surface: #121212; }
         body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
@@ -15,161 +15,165 @@
         }
         .logo { font-weight: 900; color: var(--red); letter-spacing: 2px; font-size: 1.4rem; cursor: pointer; }
         .nav-links { display: flex; gap: 20px; align-items: center; }
-        .nav-links a, .info-trigger { color: #aaa; text-decoration: none; cursor: pointer; font-size: 0.9rem; transition: 0.3s; }
-        .nav-links a:hover, .info-trigger:hover { color: var(--red); }
+        .info-trigger { color: #aaa; cursor: pointer; font-size: 0.9rem; transition: 0.3s; }
+        .info-trigger:hover { color: var(--red); }
 
-        /* CATALOGO GRID */
-        #catalog { display: grid; grid-template-columns: repeat(auto-fill, 180px); gap: 20px; padding: 40px; justify-content: center; }
-        .serie-card { cursor: pointer; transition: 0.3s; border-radius: 8px; overflow: hidden; background: var(--surface); border: 1px solid #222; }
-        .serie-card:hover { transform: translateY(-5px); border-color: var(--red); }
-        .serie-card img { width: 100%; height: 260px; object-fit: cover; }
-        .serie-card p { font-size: 0.8rem; padding: 8px; margin: 0; text-align: center; }
+        /* CATALOGO */
+        .section-title { padding: 30px 40px 10px; color: var(--red); font-weight: bold; text-transform: uppercase; font-size: 1.2rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, 180px); gap: 20px; padding: 10px 40px 40px; justify-content: center; }
+        .card { cursor: pointer; transition: 0.3s; border-radius: 8px; overflow: hidden; background: var(--surface); border: 1px solid #222; }
+        .card:hover { transform: translateY(-5px); border-color: var(--red); box-shadow: 0 5px 15px rgba(229,9,20,0.3); }
+        .card img { width: 100%; height: 260px; object-fit: cover; }
+        .card p { font-size: 0.8rem; padding: 10px; margin: 0; text-align: center; font-weight: bold; }
 
-        /* REPRODUCTOR FIJO (EVITA MOVIMIENTOS) */
+        /* REPRODUCTOR FIJO */
         #player-view { display: none; padding: 20px 0; }
         .pc-monitor { width: 720px; height: 400px; margin: 0 auto; border: 10px solid #ddd; border-radius: 20px; background: #000; position: relative; overflow: hidden; }
         .pc-monitor img { width: 100%; height: 100%; object-fit: cover; }
         .pc-base { width: 140px; height: 40px; background: #999; margin: -5px auto 30px; clip-path: polygon(15% 0, 85% 0, 100% 100%, 0 100%); }
-
-        /* Contenedor de video con tamaño bloqueado */
+        
         .video-box { 
-            width: 954px; height: 562px; 
-            margin: 30px auto; 
-            background: #000; 
-            border: 2px solid #222; 
-            border-radius: 10px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            overflow: hidden; /* Evita que el iframe mueva el contenedor */
+            width: 954px; height: 562px; margin: 30px auto; 
+            background: #000; border: 2px solid #222; border-radius: 10px; 
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
         iframe { width: 954px !important; height: 562px !important; border: none; }
 
         /* BOTONES */
-        .btn-ui { background: var(--red); color: white; border: none; padding: 10px 20px; margin: 5px; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .btn-ui { background: var(--red); color: white; border: none; padding: 10px 20px; margin: 5px; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.3s; }
+        .btn-ui:hover { transform: scale(1.05); }
+        .btn-temp { background: #222; color: white; padding: 12px 30px; border-radius: 30px; border: 1px solid #444; cursor: pointer; margin: 5px; font-weight: bold; }
+        .btn-temp:hover { background: var(--red); border-color: var(--red); }
 
-        /* VENTANA MODAL TIPO PC */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
-        .modal-pc { 
-            background: #1a1a1a; width: 500px; margin: 10% auto; border-radius: 10px; border: 1px solid #444; 
-            box-shadow: 0 0 30px rgba(0,0,0,1); overflow: hidden;
-        }
-        .modal-header { background: #333; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .modal-body { padding: 30px; text-align: center; line-height: 1.6; }
-        .modal-body a { color: var(--red); text-decoration: none; display: block; margin: 10px 0; font-weight: bold; }
+        /* MODAL PC */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); }
+        .modal-pc { background: #1a1a1a; width: 450px; margin: 10% auto; border-radius: 10px; border: 1px solid #444; overflow: hidden; box-shadow: 0 0 40px rgba(0,0,0,0.8); }
+        .modal-header { background: #333; padding: 10px 15px; display: flex; justify-content: space-between; font-size: 0.8rem; color: #bbb; }
+        .modal-body { padding: 25px; text-align: center; }
+        .modal-body a { color: var(--red); text-decoration: none; display: block; margin: 12px 0; font-weight: bold; font-size: 1.1rem; }
 
-        /* WHATSAPP PROFESIONAL SVG */
-        .ws-float {
-            position: fixed; bottom: 25px; right: 25px; 
-            background: #25d366; width: 60px; height: 60px; 
-            border-radius: 50%; display: flex; align-items: center; 
-            justify-content: center; z-index: 1500; transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-        }
-        .ws-float:hover { transform: scale(1.1); }
-        .ws-float svg { width: 35px; height: 35px; fill: white; }
+        /* WHATSAPP SVG */
+        .ws-float { position: fixed; bottom: 25px; right: 25px; background: #25d366; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1500; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+        .ws-float svg { width: 35px; fill: white; }
     </style>
 </head>
 <body>
 
 <header>
     <div class="logo" onclick="goHome()">CINEVERSE <span style="color:white">PRO</span></div>
-    <div id="header-title" style="text-transform: uppercase; font-weight: bold;"></div>
+    <div id="header-title" style="text-transform: uppercase; font-size: 1.2rem;"></div>
     <div class="nav-links">
-        <span class="info-trigger" onclick="toggleModal()">Información</span>
-        <div class="search-box"><input type="text" id="searchInput" placeholder="Buscar..." onkeyup="search()" style="background:#222; border:1px solid #444; color:white; padding:5px 15px; border-radius:20px;"></div>
+        <span class="info-trigger" onclick="toggleModal()">INFORMACIÓN</span>
     </div>
 </header>
 
-<div id="catalog"></div>
+<div id="main-catalog">
+    <div class="section-title">Series y Temporadas</div>
+    <div id="catalog-series" class="grid"></div>
+    <div class="section-title">Películas de Estreno</div>
+    <div id="catalog-pelis" class="grid"></div>
+</div>
 
 <div id="player-view">
-    <div style="text-align: center; margin-bottom: 20px;">
-        <button class="btn-ui" onclick="goHome()" style="background:#333">⬅ ATRÁS</button>
-        <button class="btn-ui" id="share-btn">COMPARTIR</button>
+    <div style="text-align: center; margin-bottom: 25px;">
+        <button class="btn-ui" onclick="goHome()" style="background:#333">⬅ VOLVER AL INICIO</button>
+        <button class="btn-ui" id="btn-back-temps" style="display:none; background:#555" onclick="showSeasonSelector()">ELEGIR TEMPORADA</button>
     </div>
+
     <div class="pc-monitor"><img id="monitor-foto" src=""></div>
     <div class="pc-base"></div>
-    <div id="cap-buttons" style="text-align: center;"></div>
-    
+
+    <div id="season-selector" style="text-align: center; margin-bottom: 20px;"></div>
+    <div id="cap-buttons" style="text-align: center; margin-bottom: 20px;"></div>
+
     <div class="video-box" id="main-video">
-        <h3 style="color:#222">SELECCIONA CAPÍTULO</h3>
+        <h3 style="color:#222">REPRODUCTOR BLOQUEADO</h3>
     </div>
 </div>
 
 <div id="infoModal" class="modal">
     <div class="modal-pc">
         <div class="modal-header">
-            <span>System Information - CineVerse</span>
-            <span style="cursor:pointer" onclick="toggleModal()">✖</span>
+            <span>CineVerse OS v2.0 - Info</span>
+            <span onclick="toggleModal()" style="cursor:pointer; color:white;">[ X ]</span>
         </div>
         <div class="modal-body">
-            <img src="https://via.placeholder.com/80" style="border-radius: 50%; margin-bottom: 15px;">
-            <p><strong>Creado por:</strong> Tu Nombre/Marca</p>
-            <p>Versión 2.0 - Linux Optimized WebApp</p>
+            <p><strong>Desarrollado por:</strong> Tu Nombre</p>
             <hr style="border:0; border-top:1px solid #333;">
-            <a href="https://facebook.com/tu-link" target="_blank">Facebook</a>
-            <a href="https://github.com/tu-link" target="_blank">GitHub</a>
-            <a href="https://miportafolio.com" target="_blank">Mi Portafolio</a>
-            <p style="font-size: 0.8rem; color: #888; margin-top: 20px;">
-                <strong>Instrucciones:</strong> Descarga los videos usando esta app: <br>
-                <a href="URL_DE_TU_APP_DESCARGA" style="display:inline; color:#00ffcc;">App Descargador Pro</a>
+            <a href="#">Facebook Oficial</a>
+            <a href="#">GitHub Portafolio</a>
+            <p style="font-size: 0.8rem; color: #777; margin-top: 20px;">
+                Descarga los videos con nuestra App:<br>
+                <a href="#" style="color:#00ffcc; font-size: 0.9rem;">Download App Pro</a>
             </p>
         </div>
     </div>
 </div>
 
 <a href="https://wa.me/TUNUMERO" class="ws-float" target="_blank">
-    <svg viewBox="0 0 32 32">
-        <path d="M16 0c-8.837 0-16 7.163-16 16 0 2.825.737 5.48 2.025 7.787l-2.025 7.387 7.563-1.987c2.237 1.187 4.787 1.813 7.437 1.813 8.837 0 16-7.163 16-16s-7.163-16-16-16zm8.913 22.7c-.363 1.025-1.813 1.863-2.5 2-.625.112-1.437.213-2.313-.063-.563-.175-1.287-.413-2.212-.8-3.925-1.637-6.45-5.613-6.65-5.875-.187-.263-1.613-2.137-1.613-4.075s1.013-2.887 1.375-3.275c.363-.387.787-.487 1.05-.487s.525.013.75.025c.237.013.537-.087.838.638.3.725 1.025 2.5 1.112 2.687.087.187.15.413.025.65-.125.237-.187.387-.375.612-.187.213-.4.475-.575.637-.2.188-.4.4-.175.75.225.35.988 1.625 2.125 2.637 1.463 1.3 2.7 1.7 3.088 1.9.387.2.613.163.838-.1.225-.263.975-1.137 1.238-1.525.263-.387.525-.325.888-.187s2.313 1.137 2.713 1.337c.4.2.663.3.763.463.1.175.1.988-.263 2.013z"/>
-    </svg>
+    <svg viewBox="0 0 32 32"><path d="M16 0c-8.837 0-16 7.163-16 16 0 2.825.737 5.48 2.025 7.787l-2.025 7.387 7.563-1.987c2.237 1.187 4.787 1.813 7.437 1.813 8.837 0 16-7.163 16-16s-7.163-16-16-16zm8.913 22.7c-.363 1.025-1.813 1.863-2.5 2-.625.112-1.437.213-2.313-.063-.563-.175-1.287-.413-2.212-.8-3.925-1.637-6.45-5.613-6.65-5.875-.187-.263-1.613-2.137-1.613-4.075s1.013-2.887 1.375-3.275c.363-.387.787-.487 1.05-.487s.525.013.75.025c.237.013.537-.087.838.638.3.725 1.025 2.5 1.112 2.687.087.187.15.413.025.65-.125.237-.187.387-.375.612-.187.213-.4.475-.575.637-.2.188-.4.4-.175.75.225.35.988 1.625 2.125 2.637 1.463 1.3 2.7 1.7 3.088 1.9.387.2.613.163.838-.1.225-.263.975-1.137 1.238-1.525.263-.387.525-.325.888-.187s2.313 1.137 2.713 1.337c.4.2.663.3.763.463.1.175.1.988-.263 2.013z"/></svg>
 </a>
 
 <script>
-    let db = null;
-    const slugify = (text) => text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+    let dbSeries = [], dbPelis = [], currentSerie = null;
+    const slugify = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
 
-    fetch('database.json')
-        .then(res => res.json())
-        .then(data => {
-            db = data;
-            renderCatalog(db.series);
-            checkHash();
-        });
+    Promise.all([
+        fetch('series.json').then(r => r.json()),
+        fetch('peliculas.json').then(r => r.json())
+    ]).then(([series, pelis]) => {
+        dbSeries = series; dbPelis = pelis;
+        renderHome();
+        checkHash();
+    });
 
-    function renderCatalog(list) {
-        const catalog = document.getElementById('catalog');
-        catalog.innerHTML = list.map(s => `
-            <div class="serie-card" onclick="selectSerie('${s.titulo}')">
-                <img src="${s.poster}">
-                <p>${s.titulo}</p>
-            </div>
-        `).join('');
+    function renderHome() {
+        document.getElementById('catalog-series').innerHTML = dbSeries.map(s => `
+            <div class="card" onclick="openSerie('${s.titulo}')">
+                <img src="${s.poster}"><p>${s.titulo}</p>
+            </div>`).join('');
+        document.getElementById('catalog-pelis').innerHTML = dbPelis.map(p => `
+            <div class="card" onclick="openPeli('${p.titulo}')">
+                <img src="${p.poster}"><p>${p.titulo}</p>
+            </div>`).join('');
     }
 
-    function search() {
-        const q = document.getElementById('searchInput').value.toLowerCase();
-        renderCatalog(db.series.filter(s => s.titulo.toLowerCase().includes(q)));
+    function openPeli(titulo) {
+        const peli = dbPelis.find(p => p.titulo === titulo);
+        setupPlayer(peli);
+        document.getElementById('cap-buttons').innerHTML = `<button class="btn-ui" style="padding:15px 40px; font-size:1.1rem;" onclick="play('${btoa(peli.embed)}')">▶ REPRODUCIR AHORA</button>`;
     }
 
-    function selectSerie(tituloOriginal) {
-        const serie = db.series.find(s => s.titulo === tituloOriginal);
-        if(!serie) return;
-        window.location.hash = slugify(serie.titulo); 
-        document.getElementById('catalog').style.display = 'none';
+    function openSerie(titulo) {
+        currentSerie = dbSeries.find(s => s.titulo === titulo);
+        setupPlayer(currentSerie);
+        document.getElementById('btn-back-temps').style.display = 'inline-block';
+        showSeasonSelector();
+    }
+
+    function setupPlayer(item) {
+        window.location.hash = slugify(item.titulo);
+        document.getElementById('main-catalog').style.display = 'none';
         document.getElementById('player-view').style.display = 'block';
-        document.getElementById('monitor-foto').src = serie.preview_foto;
-        document.getElementById('header-title').innerText = serie.titulo;
-        
-        document.getElementById('cap-buttons').innerHTML = serie.capitulos.map(c => `
-            <button class="btn-ui" onclick="play('${btoa(c.embed)}')">CAP ${c.num}</button>
-        `).join('');
+        document.getElementById('monitor-foto').src = item.preview_foto;
+        document.getElementById('header-title').innerText = item.titulo;
+    }
+
+    function showSeasonSelector() {
+        document.getElementById('cap-buttons').innerHTML = "";
+        document.getElementById('season-selector').innerHTML = `<h2 style='color:var(--red)'>Temporadas</h2>` + 
+            currentSerie.temporadas.map((t, idx) => `<button class="btn-temp" onclick="showChapters(${idx})">${t.nombre}</button>`).join('');
+    }
+
+    function showChapters(idx) {
+        document.getElementById('season-selector').innerHTML = "";
+        const temp = currentSerie.temporadas[idx];
+        document.getElementById('cap-buttons').innerHTML = `<h2>${temp.nombre} - Capítulos</h2>` + 
+            temp.capitulos.map(c => `<button class="btn-ui" onclick="play('${btoa(c.embed)}')">Cap ${c.num}</button>`).join('');
     }
 
     function play(code) {
-        // Al inyectar el código, forzamos que el iframe no deforme el contenedor fijo
-        const box = document.getElementById('main-video');
-        box.innerHTML = atob(code);
+        document.getElementById('main-video').innerHTML = atob(code);
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
@@ -181,10 +185,11 @@
 
     function checkHash() {
         const h = window.location.hash.replace('#', '');
-        if(h && db) {
-            const found = db.series.find(s => slugify(s.titulo) === h);
-            if(found) selectSerie(found.titulo);
-        }
+        if(!h) return;
+        const s = dbSeries.find(x => slugify(x.titulo) === h);
+        if(s) { openSerie(s.titulo); return; }
+        const p = dbPelis.find(x => slugify(x.titulo) === h);
+        if(p) openPeli(p.titulo);
     }
 </script>
 </body>
