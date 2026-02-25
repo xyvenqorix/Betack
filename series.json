@@ -1,0 +1,22 @@
+[
+  {
+    "titulo": "La Casa de Papel",
+    "poster": "https://via.placeholder.com/172x256/ff0000/ffffff?text=Casa+de+Papel",
+    "preview_foto": "https://images.alphacoders.com/102/1021950.jpg",
+    "temporadas": [
+      {
+        "nombre": "Temporada 1",
+        "capitulos": [
+          { "num": 1, "titulo": "Efectuar lo acordado", "embed": "<IFRAME SRC='https://powvideo.org/embed-ejemplo1.html' width='954' height='562' allowfullscreen></IFRAME>" },
+          { "num": 2, "titulo": "Imprudencias ligeras", "embed": "<IFRAME SRC='https://powvideo.org/embed-ejemplo2.html' width='954' height='562' allowfullscreen></IFRAME>" }
+        ]
+      },
+      {
+        "nombre": "Temporada 2",
+        "capitulos": [
+          { "num": 1, "titulo": "Capítulo 1 T2", "embed": "<IFRAME SRC='https://powvideo.org/embed-ejemplo3.html' width='954' height='562' allowfullscreen></IFRAME>" }
+        ]
+      }
+    ]
+  }
+]
