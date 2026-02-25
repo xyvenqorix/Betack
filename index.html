@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280">
+    <title>CineVerse | Elite Streaming</title>
+    <style>
+        :root { --main: #e50914; --bg: #080808; --card: #121212; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; }
+        
+        /* Logo SVG Moderno */
+        .header { padding: 30px; text-align: center; }
+        .logo { width: 180px; fill: var(--main); }
+
+        .container { width: 1100px; margin: 0 auto; }
+
+        /* Contenedor donde se cargará el TOML */
+        #reproductor-destino {
+            background: #000;
+            width: 954px;
+            height: 562px;
+            margin: 0 auto;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+            border: 1px solid #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .serie-info { text-align: center; margin-top: 25px; }
+        h1 { font-size: 2.5rem; margin: 0; }
+        .details { color: #666; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <svg class="logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 7L9 14.5V21L21 14.5V7Z" />
+        <path d="M12.5 3L3 8.5V15L12.5 9.5V3Z" opacity="0.5" />
+    </svg>
+    <div style="font-weight: 900; letter-spacing: 5px;">CINEVERSE</div>
+</div>
+
+<div class="container">
+    <div id="reproductor-destino">
+        <p>Cargando video...</p>
+    </div>
+
+    <div class="serie-info">
+        <h1 id="cap-titulo">Cargando Título...</h1>
+        <p class="details">Temporada 1 • 4K Ultra HD • Disponible</p>
+    </div>
+</div>
+
+<script src="https://unpkg.com/@iarna/toml@2.2.5/toml.js"></script>
+
+<script>
+    async function cargarContenido() {
+        try {
+            // 1. Leemos el archivo TOML externo
+            const respuesta = await fetch('database.toml');
+            const texto = await respuesta.text();
+            
+            // 2. Parseamos el contenido
+            const data = TOML.parse(texto);
+            
+            // 3. Obtenemos el primer capítulo (T1 C1)
+            const capitulo = data.temporadas[0].capitulos[0];
+
+            // 4. Inyectamos el CODIGO_EMBED directamente del TOML al HTML
+            document.getElementById('reproductor-destino').innerHTML = capitulo.codigo_embed;
+            document.getElementById('cap-titulo').innerText = capitulo.titulo;
+            
+        } catch (error) {
+            console.error("Error cargando el TOML:", error);
+            document.getElementById('reproductor-destino').innerHTML = "Error al cargar el video.";
+        }
+    }
+
+    window.onload = cargarContenido;
+</script>
+
+</body>
+</html>

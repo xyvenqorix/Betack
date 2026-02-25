@@ -1,0 +1,13 @@
+[[temporadas]]
+numero = 1
+
+  [[temporadas.capitulos]]
+  numero = 1
+  titulo = "Capítulo Piloto"
+  # Guardamos el código completo aquí:
+  codigo_embed = '<IFRAME SRC="https://powvideo.org/embed-c2nw6ki6806d-954x562.html" frameborder="0" marginwidth="0" marginheight="0" scrolling="NO" width="954" height="562" allowfullscreen="true"></IFRAME>'
+
+  [[temporadas.capitulos]]
+  numero = 2
+  titulo = "El Gran Escape"
+  codigo_embed = '<IFRAME SRC="URL_DEL_CAPITULO_2" frameborder="0" width="954" height="562" allowfullscreen="true"></IFRAME>'
