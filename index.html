@@ -2,133 +2,97 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1350"> <title>CineVerse | Premium Streaming</title>
+    <meta name="viewport" content="width=1280">
+    <title>CineVerse | Pro Player</title>
     <style>
-        :root { --accent: #ff0000; --bg: #0a0a0a; }
-        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        :root { --red: #ff0000; --bg: #050505; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; text-align: center; }
 
         /* HEADER */
-        header { 
-            padding: 20px 50px; 
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0,0,0,0.8); border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000;
-        }
-        .logo { font-size: 24px; font-weight: 900; color: var(--accent); letter-spacing: 2px; }
+        header { padding: 20px; background: #000; border-bottom: 2px solid var(--red); display: flex; justify-content: space-around; align-items: center; }
+        .logo { font-weight: 900; letter-spacing: 3px; font-size: 1.5rem; }
 
-        /* GALERIA INICIAL */
-        .home-view { padding: 50px; display: flex; gap: 30px; justify-content: center; }
-        .serie-card { 
-            width: 250px; cursor: pointer; transition: 0.4s; border-radius: 15px; overflow: hidden;
-            border: 2px solid transparent;
+        /* SECCIÓN SUPERIOR: LA FOTO EN EL MONITOR */
+        .top-preview { padding: 40px 0; background: linear-gradient(to bottom, #111, #050505); }
+        .monitor-mac {
+            width: 700px; height: 400px; margin: 0 auto;
+            border: 12px solid #ddd; border-radius: 20px; position: relative;
+            box-shadow: 0 0 40px rgba(255,255,255,0.1); overflow: hidden;
         }
-        .serie-card:hover { transform: scale(1.05); border-color: var(--accent); box-shadow: 0 0 30px var(--accent); }
-        .serie-card img { width: 100%; height: 370px; object-fit: cover; }
+        .monitor-mac img { width: 100%; height: 100%; object-fit: cover; }
+        .base { width: 120px; height: 40px; background: #bbb; margin: -5px auto 0; clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%); }
 
-        /* VISTA DE SERIE (OCULTA POR DEFECTO) */
-        #serie-view { display: none; min-height: 100vh; background-size: cover; background-position: center; background-attachment: fixed; }
-        .overlay { background: rgba(0,0,0,0.85); min-height: 100vh; padding: 40px; }
-
-        /* MONITOR MAC */
-        .monitor-container {
-            width: 980px; height: 600px; margin: 40px auto;
-            background: #1a1a1a; border: 12px solid #e0e0e0; border-radius: 30px;
-            box-shadow: 0 0 80px rgba(0,0,0,0.9); position: relative;
+        /* SECCIÓN MEDIA: SELECTOR */
+        .controls { padding: 30px; }
+        .btn-cap { 
+            background: #222; border: 1px solid #444; color: white; 
+            padding: 12px 25px; margin: 5px; cursor: pointer; border-radius: 5px;
+            transition: 0.3s;
         }
-        .screen { width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; }
-        .monitor-base { 
-            width: 180px; height: 60px; background: #c0c0c0; margin: -10px auto 0;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
-        }
+        .btn-cap:hover { background: var(--red); border-color: var(--red); box-shadow: 0 0 15px var(--red); }
 
-        /* CAPITULOS */
-        .episodes-area { width: 1100px; margin: 50px auto; }
-        .season-title { font-size: 2rem; border-left: 5px solid var(--accent); padding-left: 15px; margin-bottom: 30px; }
-        .ep-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-        .ep-item { 
-            background: #151515; padding: 20px; border-radius: 10px; cursor: pointer;
-            border: 1px solid #333; text-align: center; transition: 0.3s;
+        /* SECCIÓN INFERIOR: EL VIDEO REAL */
+        .bottom-video { 
+            width: 954px; height: 562px; margin: 20px auto 100px; 
+            background: #000; border: 2px dashed #333; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
         }
-        .ep-item:hover { background: var(--accent); color: white; }
-
-        .back-btn { background: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
+        .video-label { color: #555; font-size: 1.2rem; font-weight: bold; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">CINEVERSE <span style="color:white">PRO</span></div>
-    <button class="back-btn" onclick="goHome()">⬅ Volver al Inicio</button>
+    <div class="logo"><span style="color:var(--red)">CINEVERSE</span> PRO</div>
+    <div id="serie-name" style="font-size: 1.2rem; border-left: 2px solid var(--red); padding-left: 15px;">Cargando serie...</div>
 </header>
 
-<div id="home-view" class="home-view">
+<section class="top-preview">
+    <div class="monitor-mac">
+        <img id="foto-muestra" src="" alt="Muestra de la serie">
     </div>
+    <div class="base"></div>
+</section>
 
-<div id="serie-view">
-    <div class="overlay">
-        <div class="monitor-container">
-            <div class="screen" id="main-screen">
-                <h2 id="wait-msg">Selecciona un capítulo abajo</h2>
-            </div>
-        </div>
-        <div class="monitor-base"></div>
+<hr style="border: 0; border-top: 1px solid #222; width: 80%;">
 
-        <div class="episodes-area">
-            <div class="season-title" id="serie-title">Título Serie</div>
-            <div class="ep-list" id="ep-list-container">
-                </div>
-        </div>
-    </div>
-</div>
+<section class="controls">
+    <h3 style="color:var(--red)">ELEGIR CAPÍTULO:</h3>
+    <div id="btn-container"></div>
+</section>
+
+<section class="bottom-video" id="video-player">
+    <div class="video-label">El video aparecerá aquí al elegir capítulo</div>
+</section>
 
 <script>
     let db = null;
 
-    // 1. Cargar base de datos
+    // Cargar JSON
     fetch('database.json')
         .then(res => res.json())
         .then(data => {
             db = data;
-            renderHome();
+            const serie = db.series[0]; // Cargamos la primera serie por defecto
+            
+            // Ponemos la foto arriba
+            document.getElementById('foto-muestra').src = serie.foto_preview;
+            document.getElementById('serie-name').innerText = serie.titulo;
+
+            // Generamos los botones abajo
+            const container = document.getElementById('btn-container');
+            serie.temporadas[0].capitulos.forEach(cap => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-cap';
+                btn.innerText = `Capítulo ${cap.num}: ${cap.titulo}`;
+                // Al hacer clic, inyectamos el embed en la sección de ABAJO
+                btn.onclick = () => {
+                    document.getElementById('video-player').innerHTML = cap.embed;
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                };
+                container.appendChild(btn);
+            });
         });
-
-    function renderHome() {
-        const home = document.getElementById('home-view');
-        home.innerHTML = db.series.map(serie => `
-            <div class="serie-card" onclick="openSerie('${serie.id}')">
-                <img src="${serie.poster}">
-                <div style="padding:15px; text-align:center; font-weight:bold;">${serie.titulo}</div>
-            </div>
-        `).join('');
-    }
-
-    function openSerie(id) {
-        const serie = db.series.find(s => s.id === id);
-        document.getElementById('home-view').style.display = 'none';
-        const view = document.getElementById('serie-view');
-        view.style.display = 'block';
-        view.style.backgroundImage = `url('${serie.fondo}')`;
-        
-        document.getElementById('serie-title').innerText = serie.titulo;
-        
-        // Renderizar Capítulos de la T1
-        const list = document.getElementById('ep-list-container');
-        list.innerHTML = serie.temporadas[0].capitulos.map(cap => `
-            <div class="ep-item" onclick="playCap('${btoa(cap.embed)}')">
-                <div style="font-size:0.8rem; opacity:0.6">Capítulo ${cap.num}</div>
-                <div>${cap.titulo}</div>
-            </div>
-        `).join('');
-    }
-
-    function playCap(encodedEmbed) {
-        document.getElementById('main-screen').innerHTML = atob(encodedEmbed);
-    }
-
-    function goHome() {
-        document.getElementById('home-view').style.display = 'flex';
-        document.getElementById('serie-view').style.display = 'none';
-        document.getElementById('main-screen').innerHTML = '<h2>Selecciona un capítulo abajo</h2>';
-    }
 </script>
 
 </body>
