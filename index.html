@@ -2,97 +2,123 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1280">
-    <title>CineVerse | Pro Player</title>
+    <meta name="viewport" content="width=1280"> <title>CineVerse Pro | Series</title>
     <style>
-        :root { --red: #ff0000; --bg: #050505; }
-        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; text-align: center; }
+        :root { --red: #ff3c3c; --bg: #080808; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; }
 
-        /* HEADER */
-        header { padding: 20px; background: #000; border-bottom: 2px solid var(--red); display: flex; justify-content: space-around; align-items: center; }
-        .logo { font-weight: 900; letter-spacing: 3px; font-size: 1.5rem; }
+        /* --- HEADER --- */
+        header { padding: 20px 50px; background: #000; border-bottom: 2px solid var(--red); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 900; letter-spacing: 3px; font-size: 1.5rem; cursor: pointer; }
 
-        /* SECCIÓN SUPERIOR: LA FOTO EN EL MONITOR */
-        .top-preview { padding: 40px 0; background: linear-gradient(to bottom, #111, #050505); }
-        .monitor-mac {
+        /* --- SELECCIÓN DE SERIES (CUADRITOS) --- */
+        #catalog { display: flex; justify-content: center; gap: 30px; padding: 50px; }
+        .serie-card { 
+            width: 172px; cursor: pointer; transition: 0.3s; 
+            border: 2px solid transparent; border-radius: 10px; overflow: hidden;
+        }
+        .serie-card:hover { transform: translateY(-10px); border-color: var(--red); box-shadow: 0 0 20px var(--red); }
+        .serie-card img { width: 100%; height: 256px; object-fit: cover; }
+
+        /* --- INTERFAZ DE REPRODUCCIÓN (OCULTA AL INICIO) --- */
+        #player-view { display: none; padding-top: 30px; }
+
+        /* MONITOR ARRIBA (FOTO) */
+        .pc-preview {
             width: 700px; height: 400px; margin: 0 auto;
-            border: 12px solid #ddd; border-radius: 20px; position: relative;
-            box-shadow: 0 0 40px rgba(255,255,255,0.1); overflow: hidden;
+            border: 12px solid #ccc; border-radius: 20px; background: #000;
+            position: relative; overflow: hidden;
         }
-        .monitor-mac img { width: 100%; height: 100%; object-fit: cover; }
-        .base { width: 120px; height: 40px; background: #bbb; margin: -5px auto 0; clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%); }
+        .pc-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .pc-base { width: 140px; height: 40px; background: #999; margin: -5px auto 40px; clip-path: polygon(15% 0, 85% 0, 100% 100%, 0 100%); }
 
-        /* SECCIÓN MEDIA: SELECTOR */
-        .controls { padding: 30px; }
-        .btn-cap { 
-            background: #222; border: 1px solid #444; color: white; 
-            padding: 12px 25px; margin: 5px; cursor: pointer; border-radius: 5px;
-            transition: 0.3s;
-        }
-        .btn-cap:hover { background: var(--red); border-color: var(--red); box-shadow: 0 0 15px var(--red); }
-
-        /* SECCIÓN INFERIOR: EL VIDEO REAL */
-        .bottom-video { 
-            width: 954px; height: 562px; margin: 20px auto 100px; 
-            background: #000; border: 2px dashed #333; border-radius: 10px;
+        /* VIDEO ABAJO */
+        .video-box {
+            width: 954px; height: 562px; margin: 40px auto;
+            background: #000; border: 3px solid #1a1a1a; border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 100px rgba(0,0,0,0.8);
         }
-        .video-label { color: #555; font-size: 1.2rem; font-weight: bold; text-transform: uppercase; }
+
+        .btn-cap { 
+            background: var(--red); color: white; border: none; padding: 10px 20px; 
+            margin: 5px; cursor: pointer; border-radius: 5px; font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo"><span style="color:var(--red)">CINEVERSE</span> PRO</div>
-    <div id="serie-name" style="font-size: 1.2rem; border-left: 2px solid var(--red); padding-left: 15px;">Cargando serie...</div>
+    <div class="logo" onclick="location.reload()">CINEVERSE <span style="color:var(--red)">PRO</span></div>
+    <div id="status">ELIGE UNA SERIE</div>
 </header>
 
-<section class="top-preview">
-    <div class="monitor-mac">
-        <img id="foto-muestra" src="" alt="Muestra de la serie">
+<div id="catalog">
     </div>
-    <div class="base"></div>
-</section>
 
-<hr style="border: 0; border-top: 1px solid #222; width: 80%;">
+<div id="player-view">
+    <div class="pc-preview">
+        <img id="monitor-foto" src="" alt="Vista previa">
+    </div>
+    <div class="pc-base"></div>
 
-<section class="controls">
-    <h3 style="color:var(--red)">ELEGIR CAPÍTULO:</h3>
-    <div id="btn-container"></div>
-</section>
+    <div id="cap-buttons" style="text-align: center;"></div>
 
-<section class="bottom-video" id="video-player">
-    <div class="video-label">El video aparecerá aquí al elegir capítulo</div>
-</section>
+    <div class="video-box" id="main-video">
+        <h2 style="color:#444">ELIGE UN CAPÍTULO PARA VER AQUÍ</h2>
+    </div>
+</div>
 
 <script>
     let db = null;
 
-    // Cargar JSON
+    // Cargar Base de Datos
     fetch('database.json')
         .then(res => res.json())
         .then(data => {
             db = data;
-            const serie = db.series[0]; // Cargamos la primera serie por defecto
+            const catalog = document.getElementById('catalog');
             
-            // Ponemos la foto arriba
-            document.getElementById('foto-muestra').src = serie.foto_preview;
-            document.getElementById('serie-name').innerText = serie.titulo;
-
-            // Generamos los botones abajo
-            const container = document.getElementById('btn-container');
-            serie.temporadas[0].capitulos.forEach(cap => {
-                const btn = document.createElement('button');
-                btn.className = 'btn-cap';
-                btn.innerText = `Capítulo ${cap.num}: ${cap.titulo}`;
-                // Al hacer clic, inyectamos el embed en la sección de ABAJO
-                btn.onclick = () => {
-                    document.getElementById('video-player').innerHTML = cap.embed;
-                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-                };
-                container.appendChild(btn);
+            // Crear los cuadros de las series
+            db.series.forEach(serie => {
+                catalog.innerHTML += `
+                    <div class="serie-card" onclick="selectSerie('${serie.id}')">
+                        <img src="${serie.poster}">
+                        <p style="text-align:center">${serie.titulo}</p>
+                    </div>
+                `;
             });
         });
+
+    function selectSerie(id) {
+        const serie = db.series.find(s => s.id === id);
+        
+        // Ocultar catálogo y mostrar reproductor
+        document.getElementById('catalog').style.display = 'none';
+        document.getElementById('player-view').style.display = 'block';
+        document.getElementById('status').innerText = serie.titulo.toUpperCase();
+        
+        // Poner la foto ARRIBA en el monitor
+        document.getElementById('monitor-foto').src = serie.preview_foto;
+
+        // Generar botones de capítulos
+        const btnContainer = document.getElementById('cap-buttons');
+        btnContainer.innerHTML = "";
+        serie.capitulos.forEach(cap => {
+            btnContainer.innerHTML += `
+                <button class="btn-cap" onclick="playVideo('${btoa(cap.embed)}')">
+                    VER CAPÍTULO ${cap.num}
+                </button>
+            `;
+        });
+    }
+
+    function playVideo(encodedEmbed) {
+        // Inyectar el video ABAJO
+        document.getElementById('main-video').innerHTML = atob(encodedEmbed);
+        // Bajar la pantalla automáticamente al video
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
 </script>
 
 </body>
