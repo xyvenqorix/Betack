@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1300">
-    <title>CineVerse PRO | No-ID Version</title>
+    <title>CineVerse PRO</title>
     <style>
         :root { --red: #e50914; --bg: #050505; --surface: #121212; }
         body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
@@ -17,38 +17,42 @@
 
         #catalog { display: grid; grid-template-columns: repeat(auto-fill, 180px); gap: 20px; padding: 40px; justify-content: center; }
         .serie-card { cursor: pointer; transition: 0.3s; border-radius: 8px; overflow: hidden; background: var(--surface); border: 1px solid #222; }
-        .serie-card:hover { transform: translateY(-5px); border-color: var(--red); }
+        .serie-card:hover { transform: translateY(-5px); border-color: var(--red); box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4); }
         .serie-card img { width: 100%; height: 260px; object-fit: cover; }
-        .serie-card p { font-size: 0.8rem; padding: 8px; margin: 0; text-align: center; }
+        .serie-card p { font-size: 0.8rem; padding: 8px; margin: 0; text-align: center; font-weight: bold; }
 
         #player-view { display: none; padding: 20px 0; }
         .pc-monitor { width: 720px; height: 400px; margin: 0 auto; border: 10px solid #ddd; border-radius: 20px; background: #000; position: relative; overflow: hidden; }
         .pc-monitor img { width: 100%; height: 100%; object-fit: cover; }
         .pc-base { width: 140px; height: 40px; background: #999; margin: -5px auto 30px; clip-path: polygon(15% 0, 85% 0, 100% 100%, 0 100%); }
-        .video-box { width: 954px; height: 562px; margin: 30px auto; background: #000; border: 2px solid #222; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-        .btn-ui { background: var(--red); color: white; border: none; padding: 10px 20px; margin: 5px; cursor: pointer; border-radius: 5px; font-weight: bold; }
-        .ws-float { position: fixed; bottom: 20px; right: 20px; background: #25d366; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1000; text-decoration: none; font-size: 25px; }
+        .video-box { width: 954px; height: 562px; margin: 30px auto; background: #000; border: 2px solid #222; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
+        
+        .btn-ui { background: var(--red); color: white; border: none; padding: 10px 20px; margin: 5px; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.2s; }
+        .btn-ui:hover { opacity: 0.8; transform: scale(1.05); }
+
+        .ws-float { position: fixed; bottom: 20px; right: 20px; background: #25d366; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1000; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        
+        #header-title { color: white; font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
 <header>
     <div class="logo" onclick="goHome()">CINEVERSE <span style="color:white">PRO</span></div>
-    <div class="search-box"><input type="text" id="searchInput" placeholder="Buscar..." onkeyup="search()"></div>
-    <div id="header-extra"></div>
+    <div id="header-title"></div> <div class="search-box"><input type="text" id="searchInput" placeholder="Buscar serie..." onkeyup="search()"></div>
 </header>
 
 <div id="catalog"></div>
 
 <div id="player-view">
     <div style="text-align: center; margin-bottom: 20px;">
-        <button class="btn-ui" onclick="goHome()" style="background:#333">⬅ INICIO</button>
+        <button class="btn-ui" onclick="goHome()" style="background:#333">⬅ VOLVER</button>
         <button class="btn-ui" id="share-btn">COMPARTIR 🔗</button>
     </div>
     <div class="pc-monitor"><img id="monitor-foto" src=""></div>
     <div class="pc-base"></div>
     <div id="cap-buttons" style="text-align: center;"></div>
-    <div class="video-box" id="main-video"><h2 style="color:#222">SELECCIONA CAPÍTULO</h2></div>
+    <div class="video-box" id="main-video"><h2 style="color:#222">SELECCIONA UN CAPÍTULO</h2></div>
 </div>
 
 <a href="https://wa.me/TUNUMERO" class="ws-float">🟢</a>
@@ -56,7 +60,7 @@
 <script>
     let db = null;
 
-    // Función para limpiar el título y hacerlo URL (ej: "La Casa" -> "la-casa")
+    // Generador de URL amigable (slug)
     const slugify = (text) => text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
 
     fetch('database.json')
@@ -86,20 +90,23 @@
         const serie = db.series.find(s => s.titulo === tituloOriginal);
         if(!serie) return;
 
+        // Actualiza el Hash en la URL arriba
         window.location.hash = slugify(serie.titulo); 
         
         document.getElementById('catalog').style.display = 'none';
         document.getElementById('player-view').style.display = 'block';
         document.getElementById('monitor-foto').src = serie.preview_foto;
-        document.getElementById('header-extra').innerHTML = `<span style="color:var(--red); font-weight:bold; font-size:1.2rem;">#${serie.titulo}</span>`;
+        
+        // MOSTRAR NOMBRE LIMPIO EN EL HEADER (Sin el #)
+        document.getElementById('header-title').innerText = serie.titulo;
         
         document.getElementById('share-btn').onclick = () => {
             navigator.clipboard.writeText(window.location.href);
-            alert("Enlace copiado!");
+            alert("¡Enlace copiado con éxito!");
         };
 
         document.getElementById('cap-buttons').innerHTML = serie.capitulos.map(c => `
-            <button class="btn-ui" onclick="play('${btoa(c.embed)}')">CAP ${c.num}</button>
+            <button class="btn-ui" onclick="play('${btoa(c.embed)}')">VER CAP ${c.num}</button>
         `).join('');
     }
 
@@ -116,7 +123,11 @@
         }
     }
 
-    function goHome() { window.location.hash = ""; location.reload(); }
+    function goHome() { 
+        window.location.hash = ""; 
+        location.reload(); 
+    }
+    
     window.onhashchange = checkHash;
 </script>
 </body>
